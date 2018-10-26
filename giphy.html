@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <form>
+    <input type="text" id="queryString">
+    <br>
+    <input type="number" id="limit">
+    
+    <input id="submit" type="submit" value="Search!">
+</form>
+<div id="img-gif"></div>
+</body>
+
+<script>
+    $("#submit").on("click", function (event) {
+        event.preventDefault();
+        $("#img-gif").empty();
+        apikey = 'IYaKRIOYBzBbbeFTN1B2yEdy46Fl0mvv';
+        queryString = $("#queryString").val();
+        limit = $("#limit").val();
+        var settings = {
+            "url": "https://api.giphy.com/v1/gifs/search?api_key=" + apikey + "&q=" + queryString + "&limit="+limit,
+            "method": "GET"
+        }
+
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+
+            for (i = 0; i < response.data.length; i++) {
+                console.log(response.data[i].images.fixed_height.url);
+                var imgURL = response.data[i].images.fixed_height.url;
+
+                var image = $("<img>").attr("src", imgURL);
+                $("#img-gif").append(image);
+            }
+        });
+
+    })
+</script>
+
+</html>
