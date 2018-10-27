@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div id="new-gifs"></div>
+    <form>
+        <label>Search For?</label> <input type="text" id="queryString">
+        <br>
+        <label>Number of GIF to return</label><input type="number" id="limit">
+
+        <input id="submit" type="submit" value="Search!">
+    </form>
+    <div id="img-gif"></div>
+</body>
+
+<script>
+     var  queryString ;
+      var  limit ;
+     var  apikey = 'IYaKRIOYBzBbbeFTN1B2yEdy46Fl0mvv';
+    $("#submit").on("click", function (event) {
+        event.preventDefault(); // Preventing page refresh on button click
+        queryString = $("#queryString").val().trim();
+        limit = $("#limit").val();
+        render();
+    })
+
+
+    $(document).on("click", ".gif-button", function (event) {
+
+        event.preventDefault();
+        $("#img-gif").empty();
+
+       
+       var queryString = $(this).attr("data-name");
+        
+        var settings = {
+            "url": "https://api.giphy.com/v1/gifs/search?api_key=" + apikey + "&q=" + queryString +"&limit=" + limit,
+            "method": "GET"
+        }
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+            for (i = 0; i < response.data.length; i++) {
+                console.log(response.data[i].images.fixed_height.url);
+                var imgURL = response.data[i].images.fixed_height.url;
+                var imgStill = response.data[i].images.fixed_width_still.url;
+                var image = $("<img>").attr("src", imgURL);
+                image.addClass(img);
+                $("#img-gif").append(image);
+            }
+        });
+    })
+
+
+    function render() {
+        var newGifs = $("<button>");
+        var newData = queryString
+        newGifs.attr("data-name", newData);
+        newGifs.addClass('gif-button');
+        newGifs.text(queryString);
+
+        $("#new-gifs").append(newGifs);
+    }
+</script>
+
+</html>
